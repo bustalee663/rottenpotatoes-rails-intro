@@ -12,11 +12,11 @@ class MoviesController < ApplicationController
 
   def index
     #Load all the ratings from the movie class
-    @all_ratings = Movie.ratings
+    @all_ratings = Movie.all_ratings
 
 
     #Need this for the redirect URI to remain restful
-    loaded_session = false
+    load = false
 
     #Sort problem
     if params[:sort]
@@ -26,7 +26,7 @@ class MoviesController < ApplicationController
     elsif session[:sort]
       #If there isn't a param but there's a session, we want to load that
       @sort = session[:sort]
-      loaded_session = true
+      load = true
     else
       #If neither then no sort so set to nil for query
       @sort = nil
@@ -41,7 +41,7 @@ class MoviesController < ApplicationController
     elsif session[:ratings]
       @checked_boxes = session[:ratings]
       @movies = Movie.where(rating: @checked_boxes.keys).order(@sort)
-      loaded_session = true
+      load = true
     else #If not just stick to the sort stuff
       #sets up the nil case when we have a new program
       @checked_boxes = []
@@ -49,7 +49,7 @@ class MoviesController < ApplicationController
     end
 
     #Logic from the readme. If the session was loaded, we want to call redirect to get the URI correct
-    if loaded_session 
+    if load 
      flash.keep
      redirect_to movies_path(:sort=>@sort, :ratings=>@checked_boxes)
     end
