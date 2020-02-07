@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
   def index
     @sort = params[:sort]
     @movies = Movie.all.order(@sort)
-    #@all_ratings = Movie.ratings
+    @all_ratings = Movie.ratings
   end
 
   def new
