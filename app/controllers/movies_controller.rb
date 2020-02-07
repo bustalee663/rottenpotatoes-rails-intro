@@ -14,6 +14,10 @@ class MoviesController < ApplicationController
     @sort = params[:sort]
     @movies = Movie.all.order(@sort)
     @all_ratings = Movie.all_ratings
+    if(params[:rating])
+      @checkedRatings = params[:ratings].keys
+      @movies = Movie.where(:rating == @checkedRatings)
+    end
   end
 
   def new
