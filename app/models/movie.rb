@@ -1,3 +1,4 @@
 class Movie < ActiveRecord::Base
-    Movie.select(:rating).distinct.inject([]){ |a, m| a.push m rating}
+    def self.all_ratings
+        Movie.uniq.pluck(:rating)
 end
