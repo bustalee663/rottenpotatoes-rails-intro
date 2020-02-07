@@ -11,42 +11,52 @@ class MoviesController < ApplicationController
   end
 
   def index
-    #@sort_by = params[:sort]
-    #@movies = Movie.all.order(@sort_by)
+    #Load all the ratings from the movie class
     @all_ratings = Movie.ratings
-    
-    load = false
-    
+
+
+    #Need this for the redirect URI to remain restful
+    loaded_session = false
+
+    #Sort problem
     if params[:sort]
+      #If we have a param for sort, we want to set sort to this as well as update the session
       @sort = params[:sort]
       session[:sort] = params[:sort]
     elsif session[:sort]
+      #If there isn't a param but there's a session, we want to load that
       @sort = session[:sort]
-      load = true
+      loaded_session = true
     else
+      #If neither then no sort so set to nil for query
       @sort = nil
     end
-    
+
+      
     if params[:ratings]
+      #use this to keep track in the index view
       @checked_boxes = params[:ratings]
       @movies = Movie.where(rating: @checked_boxes.keys).order(@sort)
       session[:ratings] = params[:ratings]
     elsif session[:ratings]
       @checked_boxes = session[:ratings]
       @movies = Movie.where(rating: @checked_boxes.keys).order(@sort)
-      load = true
-    else
+      loaded_session = true
+    else #If not just stick to the sort stuff
+      #sets up the nil case when we have a new program
       @checked_boxes = []
       @movies = Movie.all.order(@sort)
     end
-    
-    if load
-      flash.keep
-      redirect_to movies_path(:sort => @sort, :ratings => @checked_boxes)
+
+    #Logic from the readme. If the session was loaded, we want to call redirect to get the URI correct
+    if loaded_session 
+     flash.keep
+     redirect_to movies_path(:sort=>@sort, :ratings=>@checked_boxes)
     end
-    
+
     @movies
   end
+
 
   def new
     # default: render 'new' template
