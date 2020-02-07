@@ -11,49 +11,14 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    @sort = params[:sort]
+    @movies = Movie.all.order(@sort)
     @all_ratings = Movie.all_ratings
-    redirect = false
-    
-    if params[:sort]
-      @sort = params[:sort]
-      session[:sort] = params[:sort]
-    elsif session[:sort]
-      @sort = session[:sort]
-      redirect = true
+    if(params[:ratings])
+      @checkedRatings = params[:ratings].keys
+      @movies = Movie.where(rating: @checkedRatings)
     else
-      @sort = nil
-    end
-    
-    if params[:commit] == "Refresh" and params[:ratings].nil?
-      @ratings = nil
-      session[:ratings] = nil
-    elsif params[:ratings]
-      @ratings = params[:ratings]
-      session[:ratings] = params[:ratings]
-    elsif session[:ratings]
-      @ratings = session[:ratings]
-      redirect = true
-    else
-      @ratings = nil
-    end
-    
-    if redirect
-      flash.keep
-      redirect_to movie_path :sort=>@sort, :ratings => @ratings
-    end
-    
-    if @ratings and @sort
-      @movies = Movie.where(:rating => @ratings.keys).find(:all, :order => (@sort))
-    elsif @ratings
-      @movies = Movie.where(:rating => @ratings.keys)
-    elsif @sort
-      @movies = Movie.find(:all, :order => (@sort))
-    else
-      @movie = Movie.all
-    end
-    if !@ratings
-      @ratings = Hash.new
+      @checkedRatings = @all_ratings
     end
   end
 
