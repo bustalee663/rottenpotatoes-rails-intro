@@ -13,8 +13,7 @@ class MoviesController < ApplicationController
   def index
     #Load all the ratings from the movie class
     @all_ratings = Movie.all_ratings
-
-
+    @checked_boxes = Movie.all_ratings
     #Need this for the redirect URI to remain restful
     load = false
 
