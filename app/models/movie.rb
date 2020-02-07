@@ -1,3 +1,3 @@
 class Movie < ActiveRecord::Base
-    Movie.select(:rating).map(&:rating).uniq
+    Movie.select(:rating).distinct.inject([]){ |a, m| a.push m rating}
 end
