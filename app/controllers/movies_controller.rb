@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
   def index
     #Load all the ratings from the movie class
     @all_ratings = Movie.all_ratings
-    @checkedRatings = @all_ratings
+    #@checkedRatings = @all_ratings
     #Need this for the redirect URI to remain restful
     load = false
 
@@ -43,7 +43,7 @@ class MoviesController < ApplicationController
       load = true
     else #If not just stick to the sort stuff
       #sets up the nil case when we have a new program
-      @checked_boxes = []
+      @checked_boxes = @all_ratings
       @movies = Movie.all.order(@sort)
     end
 
