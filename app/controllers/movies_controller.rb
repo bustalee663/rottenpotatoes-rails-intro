@@ -11,9 +11,12 @@ class MoviesController < ApplicationController
   end
 
   def index
+    # Default all ratings to the function from the model
     @all_ratings = Movie.all_ratings
+    # Helps transfer
     load = false
 
+    # Sorting functions based on if there are previous sorting or not
     if params[:sort]
       @sort = params[:sort]
       session[:sort] = params[:sort]
@@ -24,7 +27,7 @@ class MoviesController < ApplicationController
       @sort = nil
     end
 
-      
+    # Similar to the sorting but for ratings
     if params[:ratings]
       @checked_boxes = params[:ratings]
       @movies = Movie.where(rating: @checked_boxes.keys).order(@sort)
@@ -37,7 +40,8 @@ class MoviesController < ApplicationController
       @checked_boxes = @all_ratings
       @movies = Movie.all.order(@sort)
     end
-
+    
+    # If the session was loaded, call the redirect to have the correct URI
     if load 
      flash.keep
      redirect_to movies_path(:sort=>@sort, :ratings=>@checked_boxes)
